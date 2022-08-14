@@ -97,7 +97,7 @@ router.put("/:id", async (req, res, next) => {
   try {
     const { error } = contactSchema.validate(req.body);
     if (error) {
-      throw new BadRequest("missing required name field");
+      throw new BadRequest("missing fields");
     }
     const { id } = req.params;
     const result = await updateContact(id, req.body);
