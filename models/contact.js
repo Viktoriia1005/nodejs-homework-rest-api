@@ -34,7 +34,7 @@ const contactSchema = Schema(
   { versionKey: false, timestamps: true }
 );
 
-const joiAddContactSchema = Joi.object({
+const addContactSchema = Joi.object({
   name: Joi.string()
     .min(3)
     .pattern(/^[a-zA-Z ]+$/)
@@ -46,7 +46,7 @@ const joiAddContactSchema = Joi.object({
   favorite: Joi.boolean(),
 });
 
-const joiUpdateFavoriteSchema = Joi.object({
+const updateFavoriteSchema = Joi.object({
   favorite: Joi.boolean().required(),
 });
 
@@ -55,7 +55,7 @@ const Contact = model("contact", contactSchema);
 module.exports = {
   Contact,
   schemas: {
-    add: joiAddContactSchema,
-    updateFavorite: joiUpdateFavoriteSchema,
+    add: addContactSchema,
+    updateFavorite: updateFavoriteSchema,
   },
 };

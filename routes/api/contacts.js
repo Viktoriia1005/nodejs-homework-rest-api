@@ -1,12 +1,13 @@
 const express = require("express");
-const { NotFound, BadRequest } = require("http-errors");
 const { Contact, schemas } = require("../../models/contact");
+const { isValidObjectId } = require("mongoose");
+const { createError } = require("../../helpers");
 
 const router = express.Router();
 
 router.get("/", async (req, res, next) => {
   try {
-    const contacts = await Contact.find({});
+    const contacts = await Contact.find({}, "-createdAt -updatedAt");
     res.json({
       status: "success",
       code: 200,
@@ -22,9 +23,13 @@ router.get("/", async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
-    const result = await Contact.findById(id);
+    const isValid = isValidObjectId(id);
+    if (!isValid) {
+      throw createError(404);
+    }
+    const result = await Contact.findById(id, "-createdAt -updatedAt");
     if (!result) {
-      throw new NotFound(`Contact with id ${id} not found`);
+      throw createError(404);
     }
     res.json({
       status: "success",
@@ -42,7 +47,7 @@ router.post("/", async (req, res, next) => {
   try {
     const { error } = schemas.add.validate(req.body);
     if (error) {
-      throw new BadRequest("missing required name field");
+      throw createError(400, "missing required name field");
     }
     const result = await Contact.create(req.body);
     res.status(201).json({
@@ -60,9 +65,13 @@ router.post("/", async (req, res, next) => {
 router.delete("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
+    const isValid = isValidObjectId(id);
+    if (!isValid) {
+      throw createError(404);
+    }
     const result = await Contact.findByIdAndDelete(id);
     if (!result) {
-      throw new NotFound(`Contact with id ${id} not found`);
+      throw createError(404);
     }
     res.json({
       status: "success",
@@ -81,14 +90,18 @@ router.put("/:id", async (req, res, next) => {
   try {
     const { error } = schemas.add.validate(req.body);
     if (error) {
-      throw new BadRequest("missing fields");
+      throw createError(400, "missing fields");
     }
     const { id } = req.params;
+    const isValid = isValidObjectId(id);
+    if (!isValid) {
+      throw createError(404);
+    }
     const result = await Contact.findByIdAndUpdate(id, req.body, {
       new: true,
     });
     if (!result) {
-      throw new NotFound(`Contact with id ${id} not found`);
+      throw createError(404);
     }
     res.json({
       status: "success",
@@ -106,10 +119,14 @@ router.patch("/:id/favorite", async (req, res, next) => {
   try {
     const { error } = schemas.updateFavorite.validate(req.body);
     if (error) {
-      throw new BadRequest("Missing field favorite");
+      throw createError(400, error.message);
     }
 
     const { id } = req.params;
+    const isValid = isValidObjectId(id);
+    if (!isValid) {
+      throw createError(404);
+    }
     const { favorite } = req.body;
     const result = await Contact.findByIdAndUpdate(
       id,
@@ -119,7 +136,7 @@ router.patch("/:id/favorite", async (req, res, next) => {
       }
     );
     if (!result) {
-      throw new NotFound("Not found");
+      throw createError(404);
     }
     res.json({
       status: "success",
