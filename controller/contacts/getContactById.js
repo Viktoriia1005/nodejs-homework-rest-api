@@ -1,6 +1,5 @@
 const { Contact } = require("../../models/contact");
 const { createError } = require("../../helpers");
-const { isValidObjectId } = require("mongoose");
 
 const getContactById = async (req, res, next) => {
   const { id } = req.params;

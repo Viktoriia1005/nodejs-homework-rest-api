@@ -1,5 +1,4 @@
 const { Contact } = require("../../models/contact");
-const { isValidObjectId } = require("mongoose");
 const { createError } = require("../../helpers");
 
 const deleteContact = async (req, res, next) => {
