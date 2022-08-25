@@ -2,7 +2,7 @@ const { User, schemas } = require("../../models/user");
 const { BadRequest, Conflict } = require("http-errors");
 const bcrypt = require("bcryptjs");
 
-const register = async (req, res, next) => {
+const register = async (req, res) => {
   const { error } = schemas.register.validate(req.body);
   if (error) {
     throw new BadRequest("Ошибка от Joi или другой библиотеки валидации");

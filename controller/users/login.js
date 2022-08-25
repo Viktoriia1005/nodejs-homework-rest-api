@@ -3,7 +3,7 @@ const { BadRequest, Unauthorized } = require("http-errors");
 const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = process.env;
 
-const login = async (req, res, next) => {
+const login = async (req, res) => {
   const { error } = schemas.login.validate(req.body);
   if (error) {
     throw new BadRequest("Ошибка от Joi или другой библиотеки валидации");
@@ -17,7 +17,7 @@ const login = async (req, res, next) => {
   const payload = {
     id: user._id,
   };
-  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "5h" });
   await User.findByIdAndUpdate(user._id, { token });
   res.json({
     status: "success",
