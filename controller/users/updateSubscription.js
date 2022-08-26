@@ -1,11 +1,7 @@
-const { User, schemas } = require("../../models/user");
-const { NotFound, BadRequest } = require("http-errors");
+const { User } = require("../../models/user");
+const { NotFound } = require("http-errors");
 
 const updateSubscription = async (req, res) => {
-  const { error } = schemas.subscription.validate(req.body);
-  if (error) {
-    throw BadRequest(error.message);
-  }
   const { _id } = req.user;
   const { subscription } = req.body;
 

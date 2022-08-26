@@ -1,13 +1,9 @@
-const { User, schemas } = require("../../models/user");
-const { BadRequest, Unauthorized } = require("http-errors");
+const { User } = require("../../models/user");
+const { Unauthorized } = require("http-errors");
 const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = process.env;
 
 const login = async (req, res) => {
-  const { error } = schemas.login.validate(req.body);
-  if (error) {
-    throw new BadRequest("Ошибка от Joi или другой библиотеки валидации");
-  }
   const { email, password } = req.body;
   const user = await User.findOne({ email });
   if (!user || !user.comparePassword(password)) {

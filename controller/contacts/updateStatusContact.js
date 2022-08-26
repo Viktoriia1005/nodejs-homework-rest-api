@@ -1,12 +1,7 @@
-const { Contact, schemas } = require("../../models/contact");
+const { Contact } = require("../../models/contact");
 const { createError } = require("../../helpers");
 
 const updateStatusContact = async (req, res, next) => {
-  const { error } = schemas.updateFavorite.validate(req.body);
-  if (error) {
-    throw createError(400, error.message);
-  }
-
   const { id } = req.params;
   const { favorite } = req.body;
   const result = await Contact.findByIdAndUpdate(
