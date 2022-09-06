@@ -23,8 +23,7 @@ const sendEmail = async (data) => {
     };
     await transporter.sendMail(email);
   } catch (error) {
-    console.log(error.message);
-    throw error;
+    throw new Error(error.message);
   }
 };
 
