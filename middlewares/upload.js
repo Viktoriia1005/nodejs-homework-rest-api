@@ -2,6 +2,7 @@ const multer = require("multer");
 const path = require("path");
 
 const tempDir = path.join(__dirname, "../", "temp");
+const MAX_SIZE = 2048; //максимально допустимый размер файла в байтах
 
 const multerConfig = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -11,7 +12,7 @@ const multerConfig = multer.diskStorage({
     cb(null, file.originalname);
   },
   limits: {
-    fileSize: 2048,
+    fileSize: MAX_SIZE,
   },
 });
 
