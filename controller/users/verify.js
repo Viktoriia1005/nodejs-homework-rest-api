@@ -8,20 +8,19 @@ const verify = async (req, res) => {
   const user = await User.findOne({ email });
   const { verificationToken, verify } = user;
 
-  const mail = {
-    to: email,
-    subject: "Подтверждение почты",
-    html: `<a href="https://localhost:3000/api/users/verify/${verificationToken}" target="_blank">Подтвердите почту</a>`,
-  };
-
-  if (verify === false) {
-    await sendEmail(mail);
-    res.json({
-      message: "Verification email sent",
-    });
-  } else {
+  if (verify) {
     throw new BadRequest("Verification has already been passed");
   }
+
+  const mail = {
+    to: email,
+    subject: "Confirm email",
+    html: `<a target="_blank" href="https://localhost:3000/api/users/verify/${verificationToken}">Press to confirm email</a>`,
+  };
+  await sendEmail(mail);
+  res.json({
+    message: "Verification email sent",
+  });
 };
 
 module.exports = verify;
