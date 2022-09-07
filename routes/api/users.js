@@ -15,6 +15,8 @@ const {
 const router = express.Router();
 
 router.post("/signup", validation(schemas.register), ctrlWrapper(register));
+router.post("/verify", validation(schemas.verify), ctrlWrapper(verify));
+router.get("/verify/:verificationToken", ctrlWrapper(verifyEmail));
 router.post("/login", validation(schemas.login), ctrlWrapper(login));
 router.get("/current", auth, ctrlWrapper(currentUser));
 router.get("/logout", auth, ctrlWrapper(logout));
@@ -30,7 +32,5 @@ router.patch(
   upload.single("avatar"),
   ctrlWrapper(updateAvatar)
 );
-router.post("/verify", validation(schemas.verify), ctrlWrapper(verify));
-router.get("/verify/:verificationToken", ctrlWrapper(verifyEmail));
 
 module.exports = router;
